@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * User: Octaniel
@@ -20,4 +21,10 @@ public class Gosto {
 
     @EmbeddedId
     private IdGosto idGosto;
+
+    @Transient
+    private Video video;
+
+    @Transient
+    private Pessoa pessoa;
 }

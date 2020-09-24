@@ -1,5 +1,8 @@
 package com.dro.feedfood.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -11,6 +14,9 @@ import java.io.Serializable;
  * Date: 21/09/2020
  * Time: 18:05
  */
+
+@Getter
+@Setter
 @Embeddable
 public class IdGosto implements Serializable {
     @NotNull(message = "video não deve ser null")
