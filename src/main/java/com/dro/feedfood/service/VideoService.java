@@ -3,6 +3,7 @@ package com.dro.feedfood.service;
 import com.dro.feedfood.event.RecursoCriadoEvent;
 import com.dro.feedfood.model.Video;
 import com.dro.feedfood.repository.VideoRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +36,12 @@ public class VideoService {
         Video save = videoRepository.save(video);
         publisher.publishEvent(new RecursoCriadoEvent(this, httpServletResponse, save.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
+    }
+
+    public Video atualizar(Video video){
+        Video video1 = videoRepository.findById(video.getId()).get();
+        BeanUtils.copyProperties(video,video1, "dataCriacao", "url", "pessoa");
+        video1.setDataAlteracao(LocalDateTime.now());
+        return videoRepository.save(video1);
     }
 }

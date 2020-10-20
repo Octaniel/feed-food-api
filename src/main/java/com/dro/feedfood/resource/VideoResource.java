@@ -1,5 +1,6 @@
 package com.dro.feedfood.resource;
 
+import com.dro.feedfood.model.Usuario;
 import com.dro.feedfood.model.Video;
 import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.VideoRepository;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: Octaniel
@@ -43,5 +46,10 @@ public class VideoResource {
     @PostMapping
     public ResponseEntity<Video> salvar(@Valid @RequestBody Video video, HttpServletResponse httpServletResponse) {
         return videoService.salvar(video,httpServletResponse);
+    }
+
+    @PutMapping
+    public Video atualizar(@Valid @RequestBody Video video) {
+        return videoService.atualizar(video);
     }
 }

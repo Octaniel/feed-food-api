@@ -24,14 +24,8 @@ public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String titulo;
-    private String subTitulo;
     private String url;
-    private String thumbnail;
-
-    @Column(name = "permitir_comentarios")
-    private Boolean permitirComentarios;
+    private String descricao;
 
     @NotNull(message = "pessoa não deve ser null")
     @JoinColumn(name = "id_pessoa")

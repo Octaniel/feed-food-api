@@ -1,8 +1,10 @@
 package com.dro.feedfood.service;
 
 import com.dro.feedfood.event.RecursoCriadoEvent;
+import com.dro.feedfood.model.Grupo;
 import com.dro.feedfood.model.Pessoa;
 import com.dro.feedfood.model.Usuario;
+import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.UsuarioRepository;
 import com.dro.feedfood.service.exeption.UsuarioException;
 import net.bytebuddy.utility.RandomString;
@@ -10,19 +12,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class UsuarioService {
@@ -31,21 +30,33 @@ public class UsuarioService {
 //    private final JavaMailSender mailSender;
 
     private final UsuarioRepository usuarioRepository;
+    private final PessoaRepository pessoaRepository;
 
-    public UsuarioService(ApplicationEventPublisher publisher, UsuarioRepository usuarioRepository) {
+    public UsuarioService(ApplicationEventPublisher publisher, UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository) {
         this.publisher = publisher;
         this.usuarioRepository = usuarioRepository;
+        this.pessoaRepository = pessoaRepository;
     }
 
     public ResponseEntity<Usuario> salvar(Usuario usuario, HttpServletResponse httpServletResponse) {
-        validar(usuario, 0L);
+//        validar(usuario, 0L);
         LocalDateTime localDateTime = LocalDateTime.now();
         usuario.setDataAlteracao(localDateTime);
         usuario.setDataCriacao(localDateTime);
+        Pessoa pessoa = usuario.getPessoa();
+        pessoa.setDataAlteracao(localDateTime);
+        pessoa.setDataCriacao(localDateTime);
+        pessoa.setFotoUrl("https://img.elo7.com.br/product/zoom/22565B3/adesivo-parede-prato-comida-frango-salada-restaurante-lindo-adesivo-parede.jpg");
+        Pessoa save1 = pessoaRepository.save(pessoa);
 
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         usuario.setSenha(encoder.encode(usuario.getSenha()));
-
+        Grupo grupo = new Grupo();
+        grupo.setId(2);
+        List<Grupo> grupos = new ArrayList<>();
+        grupos.add(grupo);
+        usuario.setGrupos(grupos);
+        usuario.setPessoa(save1);
         Usuario save = usuarioRepository.save(usuario);
 //        Usuario one = usuarioRepository.getOne(save.getId());
         publisher.publishEvent(new RecursoCriadoEvent(this, httpServletResponse, save.getId()));

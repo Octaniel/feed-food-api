@@ -36,6 +36,9 @@ public class Usuario {
     @Transient
     private String confirmacaoSenha;
 
+    @Transient
+    private String grupo;
+
     @Size(min = 1, message = "Pelo menos um grupo deve ser selecionado para o usuario")
     @NotNull(message = "Pelo menos um grupo deve ser selecionado para o usuario")
     @ManyToMany(fetch = FetchType.EAGER)
