@@ -26,6 +26,14 @@ public class Video {
     private Long id;
     private String url;
     private String descricao;
+    private String igredientes;
+    private String preparo;
+
+    @Column(name = "canal_link")
+    private String canalLink;
+
+    @Column(name = "page_link")
+    private String pageLink;
 
     @NotNull(message = "pessoa não deve ser null")
     @JoinColumn(name = "id_pessoa")
@@ -40,5 +48,8 @@ public class Video {
 
     @Transient
     private List<Pessoa> listaDePessoasQueGostaram;
+
+    @Transient
+    private List<Item> itens;
 
 }
