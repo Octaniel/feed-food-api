@@ -25,6 +25,7 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String url;
+    private String nome;
     private String descricao;
     private String igredientes;
     private String preparo;

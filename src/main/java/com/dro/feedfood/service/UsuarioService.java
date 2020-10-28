@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UsuarioService {
@@ -44,6 +45,12 @@ public class UsuarioService {
         usuario.setDataAlteracao(localDateTime);
         usuario.setDataCriacao(localDateTime);
         Pessoa pessoa = usuario.getPessoa();
+        List<Pessoa> all = pessoaRepository.findAll();
+        for (Pessoa x: all){
+            if(pessoa.getEmail().equals(x.getEmail())){
+               return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            }
+        }
         pessoa.setDataAlteracao(localDateTime);
         pessoa.setDataCriacao(localDateTime);
         pessoa.setFotoUrl("https://img.elo7.com.br/product/zoom/22565B3/adesivo-parede-prato-comida-frango-salada-restaurante-lindo-adesivo-parede.jpg");
