@@ -1,19 +1,17 @@
 package com.dro.feedfood.resource;
 
-import com.dro.feedfood.model.Usuario;
 import com.dro.feedfood.model.Video;
 import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.VideoRepository;
 import com.dro.feedfood.service.VideoService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * User: Octaniel
@@ -34,9 +32,9 @@ public class VideoResource {
     }
 
     @GetMapping
-    public List<Video> listar(){
+    public List<Video> listar(Pageable pageable, String nome){
         List<Video> videos = new ArrayList<>();
-         videoRepository.listarDecrescente().forEach(x->{
+         videoRepository.listar(pageable, nome).forEach(x->{
             x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()));
             videos.add(x);
          });
