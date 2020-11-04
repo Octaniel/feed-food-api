@@ -24,4 +24,6 @@ public class Item {
     private Video video;
 
     private String nome;
+
+    private String link;
 }

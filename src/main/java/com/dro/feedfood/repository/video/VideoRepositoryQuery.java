@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface VideoRepositoryQuery {
 
     Page<Video> listar(Pageable pageable, String nome);
+    Page<Video> listarQueGostei(Pageable pageable, String nome);
 }

@@ -4,6 +4,7 @@ import com.dro.feedfood.model.Video;
 import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.VideoRepository;
 import com.dro.feedfood.service.VideoService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: Octaniel
@@ -32,18 +34,24 @@ public class VideoResource {
     }
 
     @GetMapping
-    public List<Video> listar(Pageable pageable, String nome){
-        List<Video> videos = new ArrayList<>();
-         videoRepository.listar(pageable, nome).forEach(x->{
-            x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()));
-            videos.add(x);
-         });
-         return videos;
+    public List<Video> listar(Pageable pageable, String nome) {
+        Page<Video> listar = videoRepository.listar(pageable, nome);
+        List<Video> collect = listar.stream().peek(x -> x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()))).collect(Collectors.toList());
+        System.out.println("jjj");
+        return collect;
+    }
+
+    @GetMapping("gostei")
+    public List<Video> listarQueGostei(Pageable pageable, String nome) {
+        Page<Video> listar = videoRepository.listarQueGostei(pageable, nome);
+        List<Video> collect = listar.stream().peek(x -> x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()))).collect(Collectors.toList());
+        System.out.println("jjj");
+        return collect;
     }
 
     @PostMapping
     public ResponseEntity<Video> salvar(@Valid @RequestBody Video video, HttpServletResponse httpServletResponse) {
-        return videoService.salvar(video,httpServletResponse);
+        return videoService.salvar(video, httpServletResponse);
     }
 
     @PutMapping
