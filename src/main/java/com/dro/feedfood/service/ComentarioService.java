@@ -30,6 +30,13 @@ public class ComentarioService {
 
     public ResponseEntity<Comentario> salvar(Comentario comentario, HttpServletResponse httpServletResponse) {
         LocalDateTime localDateTime = LocalDateTime.now();
+        String g = "";
+        g.contains("");
+        String[] f=g.split(" ");
+        for (String i:
+             f) {
+
+        }
         comentario.setDataAlteracao(localDateTime);
         comentario.setDataCriacao(localDateTime);
         Comentario save = comentarioRepository.save(comentario);

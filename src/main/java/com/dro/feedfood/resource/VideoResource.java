@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class VideoResource {
     public List<Video> listar(Pageable pageable, String nome) {
         Page<Video> listar = videoRepository.listar(pageable, nome);
         List<Video> collect = listar.stream().peek(x -> x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()))).collect(Collectors.toList());
-        System.out.println("jjj");
+        Collections.shuffle(collect);
         return collect;
     }
 
