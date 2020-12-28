@@ -1,6 +1,8 @@
 package com.dro.feedfood.resource;
 
+import com.dro.feedfood.model.Item;
 import com.dro.feedfood.model.Video;
+import com.dro.feedfood.repository.ItemRepository;
 import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.VideoRepository;
 import com.dro.feedfood.service.VideoService;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,17 +28,24 @@ public class VideoResource {
     private final VideoRepository videoRepository;
     private final VideoService videoService;
     private final PessoaRepository pessoaRepository;
+    private final ItemRepository itemRepository;
 
-    public VideoResource(VideoRepository videoRepository, VideoService videoService, PessoaRepository pessoaRepository) {
+    public VideoResource(VideoRepository videoRepository, VideoService videoService, PessoaRepository pessoaRepository, ItemRepository itemRepository) {
         this.videoRepository = videoRepository;
         this.videoService = videoService;
         this.pessoaRepository = pessoaRepository;
+        this.itemRepository = itemRepository;
     }
 
     @GetMapping
     public List<Video> listar(Pageable pageable, String nome) {
         Page<Video> listar = videoRepository.listar(pageable, nome);
-        List<Video> collect = listar.stream().peek(x -> x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()))).collect(Collectors.toList());
+        List<Video> collect = listar.stream().peek(x -> {
+            x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()));
+            List<Item> items = itemRepository.findAllByVideoId(x.getId());
+            items.forEach(z->z.setVideo(null));
+            x.setItens(items);
+        }).collect(Collectors.toList());
         Collections.shuffle(collect);
         return collect;
     }

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.dro.feedfood</groupId>
     <artifactId>Feed-Food</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <name>Feed-Food</name>
     <description>Plataforma exclusiva de conteúdos culinários, com algoritmo desenhado para identificar o perfil de cada
         um, levando conteúdo personalizado através de curtidas, compartilhamentos e lista de desejos.

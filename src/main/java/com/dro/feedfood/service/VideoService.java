@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,14 +39,14 @@ public class VideoService {
         LocalDateTime localDateTime = LocalDateTime.now();
         video.setDataAlteracao(localDateTime);
         video.setDataCriacao(localDateTime);
-        List<Item> itens = video.getItens();
+        List<Item> itens = video.getItens()==null?new ArrayList<>():video.getItens();
         Video save = videoRepository.save(video);
         itens.forEach(x->{
             x.setVideo(save);
             itemRepository.save(x);
         });
         publisher.publishEvent(new RecursoCriadoEvent(this, httpServletResponse, save.getId()));
-        save.getItens().forEach(x-> x.setVideo(null));
+        if(save.getItens()!=null)save.getItens().forEach(x-> x.setVideo(null));
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
     }
 

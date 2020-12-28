@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class VideoRepositoryImpl implements VideoRepositoryQuery {
     @PersistenceContext
@@ -48,7 +49,24 @@ public class VideoRepositoryImpl implements VideoRepositoryQuery {
         Root<Gosto> rootg = criteria.from(Gosto.class);
 
         criteria.select(root);
-
+        List<Order> orders = new ArrayList<>();
+        Random random = new Random();
+        int i = random.nextInt(12);
+        switch (i){
+            case 0: orders.add(builder.asc(root.get("id"))); break;
+            case 1: orders.add(builder.desc(root.get("id"))); break;
+            case 2: orders.add(builder.asc(root.get("url"))); break;
+            case 3: orders.add(builder.desc(root.get("url"))); break;
+            case 4: orders.add(builder.asc(root.get("nome"))); break;
+            case 5: orders.add(builder.desc(root.get("nome"))); break;
+            case 6: orders.add(builder.asc(root.get("descricao"))); break;
+            case 7: orders.add(builder.desc(root.get("descricao"))); break;
+            case 8: orders.add(builder.asc(root.get("igredientes"))); break;
+            case 9: orders.add(builder.desc(root.get("igredientes"))); break;
+            case 10: orders.add(builder.asc(root.get("preparo"))); break;
+            case 11: orders.add(builder.desc(root.get("preparo"))); break;
+        }
+        criteria.orderBy(orders);
         Predicate[] predicates = criarRestricoesQueGostei(nome, builder, root, rootg);
         criteria.where(predicates);
 
