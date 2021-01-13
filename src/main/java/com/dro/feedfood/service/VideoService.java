@@ -54,6 +54,13 @@ public class VideoService {
         Video video1 = videoRepository.findById(video.getId()).get();
         BeanUtils.copyProperties(video,video1, "dataCriacao", "url", "pessoa");
         video1.setDataAlteracao(LocalDateTime.now());
+        List<Item> itens = video.getItens();
+        itemRepository.findAllByVideoId(video1.getId()).forEach(x->{
+            if(!itens.contains(x)){
+                itemRepository.delete(x);
+            }
+        });
+        itemRepository.saveAll(itens);
         return videoRepository.save(video1);
     }
 }

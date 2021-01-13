@@ -37,6 +37,11 @@ public class VideoResource {
         this.itemRepository = itemRepository;
     }
 
+    @GetMapping("quntidadeVideo")
+    public Long quntidadeVideo(){
+       return videoRepository.count();
+    }
+
     @GetMapping
     public List<Video> listar(Pageable pageable, String nome) {
         Page<Video> listar = videoRepository.listar(pageable, nome);

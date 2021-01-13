@@ -1,0 +1,12 @@
+version: '2'
+services:
+  db:
+    container_name: postgres_feed_food
+    image: postgres:12.3
+    restart: always
+    environment:
+      POSTGRES_DATABASE: feedfood
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - 5432:5432
