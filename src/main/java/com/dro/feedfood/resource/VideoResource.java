@@ -72,4 +72,9 @@ public class VideoResource {
     public Video atualizar(@Valid @RequestBody Video video) {
         return videoService.atualizar(video);
     }
+
+    @DeleteMapping("{id}")
+    public void remover(@PathVariable Long id){
+        videoService.remover(id);
+    }
 }

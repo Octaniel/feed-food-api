@@ -1,0 +1,5 @@
+DELETE http://localhost:5000/video/7
+Authorization: Bearer {{access_token}}
+Accept: application/json
+
+###

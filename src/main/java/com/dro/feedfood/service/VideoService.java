@@ -3,6 +3,8 @@ package com.dro.feedfood.service;
 import com.dro.feedfood.event.RecursoCriadoEvent;
 import com.dro.feedfood.model.Item;
 import com.dro.feedfood.model.Video;
+import com.dro.feedfood.repository.ComentarioRepository;
+import com.dro.feedfood.repository.GostoRepository;
 import com.dro.feedfood.repository.ItemRepository;
 import com.dro.feedfood.repository.VideoRepository;
 import org.springframework.beans.BeanUtils;
@@ -28,11 +30,17 @@ public class VideoService {
 
     private final VideoRepository videoRepository;
     private final ItemRepository itemRepository;
+    private final GostoRepository gostoRepository;
+    private final ComentarioRepository comentarioRepository;
 
-    public VideoService(ApplicationEventPublisher publisher, VideoRepository videoRepository, ItemRepository itemRepository) {
+    public VideoService(ApplicationEventPublisher publisher, VideoRepository videoRepository,
+                        ItemRepository itemRepository, GostoRepository gostoRepository,
+                        ComentarioRepository comentarioRepository) {
         this.publisher = publisher;
         this.videoRepository = videoRepository;
         this.itemRepository = itemRepository;
+        this.gostoRepository = gostoRepository;
+        this.comentarioRepository = comentarioRepository;
     }
 
     public ResponseEntity<Video> salvar(Video video, HttpServletResponse httpServletResponse) {
@@ -62,5 +70,12 @@ public class VideoService {
         });
         itemRepository.saveAll(itens);
         return videoRepository.save(video1);
+    }
+
+    public void remover(Long id){
+        comentarioRepository.deleteAll(comentarioRepository.findAllByVideoId(id));
+        gostoRepository.deleteAll(gostoRepository.findAllByIdGosto_Video_Id(id));
+        itemRepository.deleteAll(itemRepository.findAllByVideoId(id));
+        videoRepository.deleteById(id);
     }
 }

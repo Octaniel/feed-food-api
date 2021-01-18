@@ -25,7 +25,7 @@ public class Comentario {
 
     @NotNull(message = "video não deve ser null")
     @JoinColumn(name = "id_video")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Video video;
 
     @NotNull(message = "pessoa não deve ser null")

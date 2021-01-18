@@ -32,7 +32,7 @@ public class TokenResource {
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(springApiProperty.getSeguranca().isEnableHttps());
-        cookie.setPath(request.getContextPath() + "/oauth/token");
+        cookie.setPath(request.getContextPath() + "/oauth.http/token");
         cookie.setMaxAge(0);
 
         response.addCookie(cookie);
