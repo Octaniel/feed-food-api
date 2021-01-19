@@ -5,6 +5,7 @@ import com.dro.feedfood.model.Usuario;
 import com.dro.feedfood.repository.UsuarioRepository;
 import com.dro.feedfood.repository.projection.UsuarioResumo;
 import com.dro.feedfood.service.UsuarioService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("usuario")
@@ -33,6 +35,17 @@ public class UsuarioResource {
     @GetMapping("listar")
     public List<Usuario> listar() {
         return UsuarioRepository.findAll();
+    }
+
+    @GetMapping
+    public List<Usuario> listarPagina(Pageable pageable, String nome) {
+        return UsuarioRepository.listar(pageable, nome).stream().peek(x -> {
+            AtomicReference<String> grupo = new AtomicReference<>();
+            List<Grupo> grupos = x.getGrupos();
+            grupos.sort(Comparator.comparing(Grupo::getNome));
+            grupos.forEach(y -> grupo.set(y.getNome()));
+            x.setGrupo(grupo.get());
+        }).collect(Collectors.toList());
     }
 
     @GetMapping("quntidadeUsuario")
@@ -76,19 +89,43 @@ public class UsuarioResource {
 
         UsuarioRepository.findAll().forEach(x -> {
             int monthValue = x.getDataCriacao().getMonthValue();
-            switch (monthValue){
-                case 1: usuarioResumoJan.setQuntidade(usuarioResumoJan.getQuntidade()+1); break;
-                case 2: usuarioResumoFev.setQuntidade(usuarioResumoFev.getQuntidade()+1); break;
-                case 3: usuarioResumoMar.setQuntidade(usuarioResumoMar.getQuntidade()+1); break;
-                case 4: usuarioResumoAbr.setQuntidade(usuarioResumoAbr.getQuntidade()+1); break;
-                case 5: usuarioResumoMai.setQuntidade(usuarioResumoMai.getQuntidade()+1); break;
-                case 6: usuarioResumoJun.setQuntidade(usuarioResumoJun.getQuntidade()+1); break;
-                case 7: usuarioResumoJul.setQuntidade(usuarioResumoJul.getQuntidade()+1); break;
-                case 8: usuarioResumoAug.setQuntidade(usuarioResumoAug.getQuntidade()+1); break;
-                case 9: usuarioResumoSet.setQuntidade(usuarioResumoSet.getQuntidade()+1); break;
-                case 10: usuarioResumoOut.setQuntidade(usuarioResumoOut.getQuntidade()+1); break;
-                case 11: usuarioResumoNov.setQuntidade(usuarioResumoNov.getQuntidade()+1); break;
-                case 12: usuarioResumoDez.setQuntidade(usuarioResumoDez.getQuntidade()+1); break;
+            switch (monthValue) {
+                case 1:
+                    usuarioResumoJan.setQuntidade(usuarioResumoJan.getQuntidade() + 1);
+                    break;
+                case 2:
+                    usuarioResumoFev.setQuntidade(usuarioResumoFev.getQuntidade() + 1);
+                    break;
+                case 3:
+                    usuarioResumoMar.setQuntidade(usuarioResumoMar.getQuntidade() + 1);
+                    break;
+                case 4:
+                    usuarioResumoAbr.setQuntidade(usuarioResumoAbr.getQuntidade() + 1);
+                    break;
+                case 5:
+                    usuarioResumoMai.setQuntidade(usuarioResumoMai.getQuntidade() + 1);
+                    break;
+                case 6:
+                    usuarioResumoJun.setQuntidade(usuarioResumoJun.getQuntidade() + 1);
+                    break;
+                case 7:
+                    usuarioResumoJul.setQuntidade(usuarioResumoJul.getQuntidade() + 1);
+                    break;
+                case 8:
+                    usuarioResumoAug.setQuntidade(usuarioResumoAug.getQuntidade() + 1);
+                    break;
+                case 9:
+                    usuarioResumoSet.setQuntidade(usuarioResumoSet.getQuntidade() + 1);
+                    break;
+                case 10:
+                    usuarioResumoOut.setQuntidade(usuarioResumoOut.getQuntidade() + 1);
+                    break;
+                case 11:
+                    usuarioResumoNov.setQuntidade(usuarioResumoNov.getQuntidade() + 1);
+                    break;
+                case 12:
+                    usuarioResumoDez.setQuntidade(usuarioResumoDez.getQuntidade() + 1);
+                    break;
             }
         });
         List<UsuarioResumo> usuarioResumos = new ArrayList<>();
