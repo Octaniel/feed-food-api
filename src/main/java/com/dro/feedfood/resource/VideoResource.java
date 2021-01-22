@@ -1,5 +1,6 @@
 package com.dro.feedfood.resource;
 
+import com.dro.feedfood.model.Pessoa;
 import com.dro.feedfood.model.Video;
 import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.VideoRepository;
@@ -41,8 +42,21 @@ public class VideoResource {
     @GetMapping
     public List<Video> listar(Pageable pageable, String nome) {
         Page<Video> listar = videoRepository.listar(pageable, nome);
-        List<Video> collect = listar.stream().peek(x -> x.getGosto().forEach(y-> x.getListaDePessoasQueGostaram().
-                add(y.getPessoa()))).collect(Collectors.toList());
+        List<Video> collect = listar.stream().peek(x -> {
+            x.getGosto().forEach(y->{
+                Pessoa pessoa = y.getPessoa();
+                pessoa.setVideo(null);
+                pessoa.setComentarios(null);
+                pessoa.setGostos(null);
+                x.getListaDePessoasQueGostaram().
+                        add(pessoa);
+            });
+            Pessoa pessoa = x.getPessoa();
+            pessoa.setVideo(null);
+            pessoa.setComentarios(null);
+            pessoa.setGostos(null);
+            x.setPessoa(pessoa);
+        }).collect(Collectors.toList());
         Collections.shuffle(collect);
         return collect;
     }
