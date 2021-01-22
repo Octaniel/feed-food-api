@@ -40,22 +40,18 @@ public class UsuarioService {
     }
 
     public ResponseEntity<Usuario> salvar(Usuario usuario, HttpServletResponse httpServletResponse) {
-//        validar(usuario, 0L);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        usuario.setDataAlteracao(localDateTime);
-        usuario.setDataCriacao(localDateTime);
-        Pessoa pessoa = usuario.getPessoa();
+        if(usuario.getId()!=null){
+            Usuario save = usuarioRepository.save(usuario);
+            publisher.publishEvent(new RecursoCriadoEvent(this, httpServletResponse, save.getId()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(save);
+        }
         List<Pessoa> all = pessoaRepository.findAll();
         for (Pessoa x: all){
-            if(pessoa.getEmail().equals(x.getEmail())){
+            if(usuario.getPessoa().getEmail().equals(x.getEmail())){
                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
             }
         }
-        pessoa.setDataAlteracao(localDateTime);
-        pessoa.setDataCriacao(localDateTime);
-        pessoa.setFotoUrl("https://img.elo7.com.br/product/zoom/22565B3/adesivo-parede-prato-comida-frango-salada-restaurante-lindo-adesivo-parede.jpg");
-        Pessoa save1 = pessoaRepository.save(pessoa);
-
+        usuario.getPessoa().setFotoUrl("https://img.elo7.com.br/product/zoom/22565B3/adesivo-parede-prato-comida-frango-salada-restaurante-lindo-adesivo-parede.jpg");
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         usuario.setSenha(encoder.encode(usuario.getSenha()));
         Grupo grupo = new Grupo();
@@ -63,9 +59,7 @@ public class UsuarioService {
         List<Grupo> grupos = new ArrayList<>();
         grupos.add(grupo);
         usuario.setGrupos(grupos);
-        usuario.setPessoa(save1);
         Usuario save = usuarioRepository.save(usuario);
-//        Usuario one = usuarioRepository.getOne(save.getId());
         publisher.publishEvent(new RecursoCriadoEvent(this, httpServletResponse, save.getId()));
         //String s = enviarEmail(one.getCliente().getPessoa().getEmail(), one.getCliente().getPessoa().getCodigo());
         return ResponseEntity.status(HttpStatus.CREATED).body(save);

@@ -166,7 +166,6 @@ public class UsuarioResource {
         return usuarioService.atualizar(id, Usuario);
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @DeleteMapping("/{id}")
     public void remover(@PathVariable Long id) {
         UsuarioRepository.deleteById(id);

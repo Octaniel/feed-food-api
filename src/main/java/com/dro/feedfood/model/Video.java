@@ -1,5 +1,8 @@
 package com.dro.feedfood.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,10 +40,22 @@ public class Video {
     @Column(name = "page_link")
     private String pageLink;
 
+    @JsonBackReference("video_pessoa")
     @NotNull(message = "pessoa não deve ser null")
     @JoinColumn(name = "id_pessoa")
-    @OneToOne
+    @ManyToOne
     private Pessoa pessoa;
+
+    @PreUpdate
+    public void atualizar(){
+        dataAlteracao = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void salvar(){
+        dataCriacao = LocalDateTime.now();
+        dataAlteracao = LocalDateTime.now();
+    }
 
     @Column(name = "dt_cria")
     private LocalDateTime dataCriacao;
@@ -47,10 +63,19 @@ public class Video {
     @Column(name = "dt_alter")
     private LocalDateTime dataAlteracao;
 
-    @Transient
-    private List<Pessoa> listaDePessoasQueGostaram;
+    @JsonManagedReference("gosto_video")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
+    private List<Gosto> gosto= new ArrayList<>();
+
+    @JsonManagedReference("comentario_video")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
+    private List<Comentario> comentarios = new ArrayList<>();
 
     @Transient
-    private List<Item> itens;
+    private List<Pessoa> listaDePessoasQueGostaram= new ArrayList<>();
+
+    @JsonManagedReference("item_video")
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
+    private List<Item> itens= new ArrayList<>();
 
 }

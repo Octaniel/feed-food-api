@@ -1,6 +1,6 @@
 package com.dro.feedfood.model;
 
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +18,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference("item_video")
     @NotNull(message = "video não deve ser null")
     @JoinColumn(name = "id_video")
     @ManyToOne

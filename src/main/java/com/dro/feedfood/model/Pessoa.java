@@ -1,5 +1,6 @@
 package com.dro.feedfood.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "pessoa")
@@ -37,6 +39,18 @@ public class Pessoa {
 
     private LocalDate dataNascimento;
 
+    @JsonManagedReference("video_pessoa")
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<Video> video;
+
+    @JsonManagedReference("gosto_pessoa")
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<Gosto> gostos;
+
+    @JsonManagedReference("comentario_pessoa")
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<Comentario> comentarios;
+
     @Column(name = "foto_url")
     private String fotoUrl;
 
@@ -45,4 +59,16 @@ public class Pessoa {
 
     @Column(name = "dt_alter")
     private LocalDateTime dataAlteracao;
+
+
+    @PreUpdate
+    public void atualizar(){
+        dataAlteracao = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void salvar(){
+        dataCriacao = LocalDateTime.now();
+        dataAlteracao = LocalDateTime.now();
+    }
 }

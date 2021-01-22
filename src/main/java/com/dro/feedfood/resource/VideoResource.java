@@ -1,8 +1,6 @@
 package com.dro.feedfood.resource;
 
-import com.dro.feedfood.model.Item;
 import com.dro.feedfood.model.Video;
-import com.dro.feedfood.repository.ItemRepository;
 import com.dro.feedfood.repository.PessoaRepository;
 import com.dro.feedfood.repository.VideoRepository;
 import com.dro.feedfood.service.VideoService;
@@ -28,13 +26,11 @@ public class VideoResource {
     private final VideoRepository videoRepository;
     private final VideoService videoService;
     private final PessoaRepository pessoaRepository;
-    private final ItemRepository itemRepository;
 
-    public VideoResource(VideoRepository videoRepository, VideoService videoService, PessoaRepository pessoaRepository, ItemRepository itemRepository) {
+    public VideoResource(VideoRepository videoRepository, VideoService videoService, PessoaRepository pessoaRepository) {
         this.videoRepository = videoRepository;
         this.videoService = videoService;
         this.pessoaRepository = pessoaRepository;
-        this.itemRepository = itemRepository;
     }
 
     @GetMapping("quntidadeVideo")
@@ -45,12 +41,8 @@ public class VideoResource {
     @GetMapping
     public List<Video> listar(Pageable pageable, String nome) {
         Page<Video> listar = videoRepository.listar(pageable, nome);
-        List<Video> collect = listar.stream().peek(x -> {
-            x.setListaDePessoasQueGostaram(pessoaRepository.listaPessoaGostaramDesteVideo(x.getId()));
-            List<Item> items = itemRepository.findAllByVideoId(x.getId());
-            items.forEach(z->z.setVideo(null));
-            x.setItens(items);
-        }).collect(Collectors.toList());
+        List<Video> collect = listar.stream().peek(x -> x.getGosto().forEach(y-> x.getListaDePessoasQueGostaram().
+                add(y.getPessoa()))).collect(Collectors.toList());
         Collections.shuffle(collect);
         return collect;
     }
@@ -66,11 +58,6 @@ public class VideoResource {
     @PostMapping
     public ResponseEntity<Video> salvar(@Valid @RequestBody Video video, HttpServletResponse httpServletResponse) {
         return videoService.salvar(video, httpServletResponse);
-    }
-
-    @PutMapping
-    public Video atualizar(@Valid @RequestBody Video video) {
-        return videoService.atualizar(video);
     }
 
     @DeleteMapping("{id}")

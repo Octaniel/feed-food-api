@@ -1,5 +1,6 @@
 package com.dro.feedfood.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +20,17 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode
 public class Gosto {
 
-    @EmbeddedId
-    private IdGosto idGosto;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Transient
+    @JsonBackReference("gosto_video")
+    @JoinColumn(name = "id_video")
+    @ManyToOne
     private Video video;
 
-    @Transient
+    @JsonBackReference("gosto_pessoa")
+    @JoinColumn(name = "id_pessoa")
+    @ManyToOne
     private Pessoa pessoa;
 }

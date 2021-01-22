@@ -41,8 +41,8 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery{
 
     private Predicate[] criarPredicates(Long idVideo, CriteriaBuilder builder, Root<Pessoa> rootpes, Root<Gosto> rootgos) {
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.equal(rootgos.get(Gosto_.ID_GOSTO).get(IdGosto_.VIDEO).get(Video_.ID),idVideo));
-        predicates.add(builder.equal(rootpes,rootgos.get(Gosto_.ID_GOSTO).get(IdGosto_.PESSOA)));
+        predicates.add(builder.equal(rootgos.get(Gosto_.VIDEO).get(Video_.ID),idVideo));
+        predicates.add(builder.equal(rootpes,rootgos.get(Gosto_.PESSOA)));
         return predicates.toArray(new Predicate[0]);
     }
 }

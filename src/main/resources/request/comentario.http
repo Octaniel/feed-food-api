@@ -1,0 +1,16 @@
+POST http://localhost:5000/comentario
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "texto": "ttttttt",
+  "video": {"id": 10},
+  "pessoa": {"id": 1}
+}
+
+###
+GET http://localhost:5000/comentario?idVideo=10
+Authorization: Bearer {{access_token}}
+Accept: application/json
+
+###

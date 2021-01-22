@@ -1,4 +1,38 @@
-DELETE http://localhost:5000/video/7
+POST http://localhost:5000/video
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "url": "https://www.youtube.com/watch?v=91VC1OnjZi8",
+  "nome": "Massa com Couve-flor Octa",
+  "descricao": "...",
+  "igredientes": "- 500 g de massa curta (ou a que você goste);",
+  "preparo": "Cozer folha",
+  "canalLink": "Octaniel Canal",
+  "pageLink": "Octaniel Page",
+  "itens": [
+    {
+      "nome": "INGREDIENTES",
+      "link": "Igre"
+    },
+    {
+      "nome": "Massa Curta",
+      "link": "https://amzn.to/2W7dgqc"
+    },
+    {
+      "nome": "Espinafre",
+      "link": "https://amzn.to/3m7ykqT"
+    }
+  ]
+}
+
+###
+GET http://localhost:5000/video
+Authorization: Bearer {{access_token}}
+Accept: application/json
+
+###
+DELETE http://localhost:5000/video/8
 Authorization: Bearer {{access_token}}
 Accept: application/json
 

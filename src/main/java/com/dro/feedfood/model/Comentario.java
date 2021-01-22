@@ -1,5 +1,6 @@
 package com.dro.feedfood.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,14 +24,16 @@ public class Comentario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference("comentario_video")
     @NotNull(message = "video não deve ser null")
     @JoinColumn(name = "id_video")
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Video video;
 
+    @JsonBackReference("comentario_pessoa")
     @NotNull(message = "pessoa não deve ser null")
     @JoinColumn(name = "id_pessoa")
-    @OneToOne
+    @ManyToOne
     private Pessoa pessoa;
 
     private String texto;
@@ -40,4 +43,15 @@ public class Comentario {
 
     @Column(name = "dt_alter")
     private LocalDateTime dataAlteracao;
+
+    @PreUpdate
+    public void atualizar(){
+        dataAlteracao = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void salvar(){
+        dataCriacao = LocalDateTime.now();
+        dataAlteracao = LocalDateTime.now();
+    }
 }

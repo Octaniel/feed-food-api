@@ -30,7 +30,7 @@ public class Usuario {
 
     @NotNull(message = "Tens que selecionar um banco")
     @JoinColumn(name = "id_pessoa")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Pessoa pessoa;
 
     @Transient
@@ -51,4 +51,16 @@ public class Usuario {
 
     @Column(name = "dt_alter")
     private LocalDateTime dataAlteracao;
+
+
+    @PreUpdate
+    public void atualizar(){
+        dataAlteracao = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void salvar(){
+        dataCriacao = LocalDateTime.now();
+        dataAlteracao = LocalDateTime.now();
+    }
 }
