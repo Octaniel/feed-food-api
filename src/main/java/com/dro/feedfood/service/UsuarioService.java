@@ -41,6 +41,8 @@ public class UsuarioService {
 
     public ResponseEntity<Usuario> salvar(Usuario usuario, HttpServletResponse httpServletResponse) {
         if(usuario.getId()!=null){
+            Usuario usuario1 = usuarioRepository.pegarDataCriacaoPorId(usuario.getId());
+            usuario.setDataCriacao(usuario1.getDataCriacao());
             Usuario save = usuarioRepository.save(usuario);
             publisher.publishEvent(new RecursoCriadoEvent(this, httpServletResponse, save.getId()));
             return ResponseEntity.status(HttpStatus.CREATED).body(save);

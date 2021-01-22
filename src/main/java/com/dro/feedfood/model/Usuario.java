@@ -3,6 +3,7 @@ package com.dro.feedfood.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -62,5 +63,12 @@ public class Usuario {
     public void salvar(){
         dataCriacao = LocalDateTime.now();
         dataAlteracao = LocalDateTime.now();
+    }
+
+    public Usuario(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Usuario() {
     }
 }
